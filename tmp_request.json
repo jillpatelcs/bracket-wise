@@ -1,0 +1,20 @@
+﻿{
+  "mode":"COUPLE",
+  "province":"ON",
+  "taxYear":2026,
+  "monthlySavings":1500,
+  "fhsaFirstHomePlan":true,
+  "assumptions":{"expectedAnnualReturn":0.05,"rrspWithdrawalTaxRate":0.2},
+  "persons":[
+    {"id":"A","label":"Person A","isNewcomer":true,"arrivalDate":"2024-09-01","canadianTaxResidentForFullYear":true,"estimatedEmploymentIncomeFor2026":54000,"availableTfsaRoom":6000,"availableRrspDeductionLimit":8000,"fhsaEligible":true,"availableFhsaParticipationRoom":3000},
+    {"id":"B","label":"Person B","isNewcomer":true,"arrivalDate":"2024-09-01","canadianTaxResidentForFullYear":true,"estimatedEmploymentIncomeFor2026":45000,"availableTfsaRoom":9000,"availableRrspDeductionLimit":5000,"fhsaEligible":true,"availableFhsaParticipationRoom":4000}
+  ],
+  "userAllocation":[
+    {"person":"A","account":"TFSA","percent":20.00},
+    {"person":"A","account":"RRSP","percent":20.00},
+    {"person":"A","account":"FHSA","percent":10.00},
+    {"person":"B","account":"TFSA","percent":30.00},
+    {"person":"B","account":"RRSP","percent":10.00},
+    {"person":"B","account":"FHSA","percent":10.00}
+  ]
+}

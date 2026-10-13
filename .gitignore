@@ -16,3 +16,6 @@ Thumbs.db
 backend/.mvn/wrapper/maven-wrapper.jar
 !backend/.mvn/wrapper/maven-wrapper.properties
 frontend/playwright/.cache/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
