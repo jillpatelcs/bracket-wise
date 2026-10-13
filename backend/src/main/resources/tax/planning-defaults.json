@@ -1,0 +1,20 @@
+{
+  "effectiveTaxYear": 2026,
+  "version": "2026.1-planning-defaults",
+  "source": "https://github.com/bracketwise/bracket-wise",
+  "retrievedOn": "2026-10-13",
+  "allocationIncrement": "100.00",
+  "defaultExpectedAnnualReturn": "0.04",
+  "defaultRrspWithdrawalTaxRate": "0.20",
+  "minExpectedAnnualReturn": "0.00",
+  "maxExpectedAnnualReturn": "0.12",
+  "minRrspWithdrawalTaxRate": "0.00",
+  "maxRrspWithdrawalTaxRate": "0.50",
+  "maxMonthlySavings": "50000.00",
+  "maxIncome": "1000000.00",
+  "maxRoom": "1000000.00",
+  "maxRequestBytes": 16384,
+  "horizonYears": 5,
+  "supportedProvince": "ON",
+  "supportedTaxYear": 2026
+}

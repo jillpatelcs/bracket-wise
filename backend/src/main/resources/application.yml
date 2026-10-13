@@ -1,0 +1,25 @@
+server:
+  port: ${PORT:8080}
+  tomcat:
+    max-http-form-post-size: 16384
+    max-swallow-size: 16384
+spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-request-size: 16KB
+      max-file-size: 16KB
+bracketwise:
+  tax-config: tax/tax-2026.json
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:4173,http://127.0.0.1:5173,http://localhost:8080}
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui
+logging:
+  pattern:
+    console: "%d{ISO8601} requestId=%X{requestId} %-5level %logger{36} - %msg%n"

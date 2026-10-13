@@ -1,0 +1,60 @@
+{
+  "effectiveTaxYear": 2026,
+  "version": "2026.1-planning-cra-2026-10-13",
+  "status": "PLANNING_PARAMETERS",
+  "statusNote": "2026 planning parameters recorded from official CRA pages on 2026-10-13. Displayed as a planning-year estimate, not a reproduction of final T1/ON428 forms.",
+  "retrievedOn": "2026-10-13",
+  "source": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/tax-rates-brackets/current-year.html",
+  "federal": {
+    "source": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/tax-rates-brackets/current-year.html",
+    "retrievedOn": "2026-10-13",
+    "lowestRate": "0.14",
+    "brackets": [
+      { "upTo": "58523.00", "rate": "0.14" },
+      { "upTo": "117045.00", "rate": "0.205" },
+      { "upTo": "181440.00", "rate": "0.26" },
+      { "upTo": "258482.00", "rate": "0.29" },
+      { "upTo": null, "rate": "0.33" }
+    ],
+    "basicPersonalAmountMax": "16452.00",
+    "basicPersonalAmountMin": "14829.00",
+    "bpaPhaseOutStart": "181440.00",
+    "bpaPhaseOutEnd": "258482.00",
+    "bpaSupplement": "1623.00",
+    "canadaEmploymentAmount": "1501.00",
+    "creditsSource": "https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4032-payroll-deductions-tables/t4032on-jan/t4032on-january-general-information.html",
+    "creditsRetrievedOn": "2026-10-13",
+    "bpaPhaseDownSource": "https://www.canada.ca/content/dam/cra-arc/formspubs/pbg/td1-ws/td1-ws-26e.pdf"
+  },
+  "ontario": {
+    "source": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/tax-rates-brackets/current-year.html",
+    "retrievedOn": "2026-10-13",
+    "lowestRate": "0.0505",
+    "brackets": [
+      { "upTo": "53891.00", "rate": "0.0505" },
+      { "upTo": "107785.00", "rate": "0.0915" },
+      { "upTo": "150000.00", "rate": "0.1116" },
+      { "upTo": "220000.00", "rate": "0.1216" },
+      { "upTo": null, "rate": "0.1316" }
+    ],
+    "basicPersonalAmount": "12989.00",
+    "basicPersonalAmountSource": "https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4032-payroll-deductions-tables/t4032on-jan/t4032on-january-general-information.html",
+    "surtaxThreshold1": "5818.00",
+    "surtaxRate1": "0.20",
+    "surtaxThreshold2": "7446.00",
+    "surtaxRate2": "0.36",
+    "surtaxSource": "https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4032-payroll-deductions-tables/t4032on-jan/t4032on-january-general-information.html",
+    "taxReductionBasicAmount": "300.00",
+    "taxReductionSource": "https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4032-payroll-deductions-tables/t4032on-jan/t4032on-january-general-information.html",
+    "ohpIncomeBasis": "TAXABLE_INCOME",
+    "ohpBands": [
+      { "upTo": "20000.00", "flat": "0.00", "base": "0.00", "rate": "0.00", "over": "0.00", "cap": "0.00" },
+      { "upTo": "36000.00", "flat": null, "base": "0.00", "rate": "0.06", "over": "20000.00", "cap": "300.00" },
+      { "upTo": "48000.00", "flat": null, "base": "300.00", "rate": "0.06", "over": "36000.00", "cap": "450.00" },
+      { "upTo": "72000.00", "flat": null, "base": "450.00", "rate": "0.25", "over": "48000.00", "cap": "600.00" },
+      { "upTo": "200000.00", "flat": null, "base": "600.00", "rate": "0.25", "over": "72000.00", "cap": "750.00" },
+      { "upTo": null, "flat": null, "base": "750.00", "rate": "0.25", "over": "200000.00", "cap": "900.00" }
+    ],
+    "ohpSource": "https://www.canada.ca/content/dam/cra-arc/migration/cra-arc/tx/bsnss/tpcs/pyrll/t4032/2026/t4032-on-1-26e.pdf"
+  }
+}

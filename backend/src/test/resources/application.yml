@@ -1,0 +1,3 @@
+bracketwise:
+  tax-config: tax/synthetic-fixture-1.json
+  cors-origins: http://localhost:5173

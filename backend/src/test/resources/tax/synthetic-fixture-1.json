@@ -1,0 +1,50 @@
+{
+  "effectiveTaxYear": 2026,
+  "version": "synthetic-fixture-1",
+  "status": "SYNTHETIC_TEST_ONLY",
+  "statusNote": "Not for production. Mechanics tests only.",
+  "retrievedOn": "2026-10-13",
+  "source": "prd-section-20.3",
+  "federal": {
+    "source": "prd-section-20.3",
+    "retrievedOn": "2026-10-13",
+    "lowestRate": "0.10",
+    "brackets": [
+      { "upTo": "50000.00", "rate": "0.10" },
+      { "upTo": null, "rate": "0.20" }
+    ],
+    "basicPersonalAmountMax": "10000.00",
+    "basicPersonalAmountMin": "10000.00",
+    "bpaPhaseOutStart": "99999999.00",
+    "bpaPhaseOutEnd": "99999999.00",
+    "bpaSupplement": "0.00",
+    "canadaEmploymentAmount": "1000.00",
+    "creditsSource": "prd-section-20.3",
+    "creditsRetrievedOn": "2026-10-13",
+    "bpaPhaseDownSource": "prd-section-20.3"
+  },
+  "ontario": {
+    "source": "prd-section-20.3",
+    "retrievedOn": "2026-10-13",
+    "lowestRate": "0.05",
+    "brackets": [
+      { "upTo": "50000.00", "rate": "0.05" },
+      { "upTo": null, "rate": "0.10" }
+    ],
+    "basicPersonalAmount": "10000.00",
+    "basicPersonalAmountSource": "prd-section-20.3",
+    "surtaxThreshold1": "3000.00",
+    "surtaxRate1": "0.20",
+    "surtaxThreshold2": "99999999.00",
+    "surtaxRate2": "0.00",
+    "surtaxSource": "prd-section-20.3",
+    "taxReductionBasicAmount": "0.00",
+    "taxReductionSource": "prd-section-20.3",
+    "ohpIncomeBasis": "TAXABLE_INCOME",
+    "ohpBands": [
+      { "upTo": "20000.00", "flat": "0.00", "base": "0.00", "rate": "0.00", "over": "0.00", "cap": "0.00" },
+      { "upTo": null, "flat": "300.00", "base": "300.00", "rate": "0.00", "over": "0.00", "cap": "300.00" }
+    ],
+    "ohpSource": "prd-section-20.3"
+  }
+}
