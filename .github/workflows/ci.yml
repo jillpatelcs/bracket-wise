@@ -22,7 +22,8 @@ jobs:
           cache-dependency-path: backend/pom.xml
 
       - name: Backend tests
-        run: bash backend/mvnw -B verify
+        working-directory: backend
+        run: bash mvnw -B verify
 
       - uses: actions/setup-node@v4
         with:
@@ -77,7 +78,12 @@ jobs:
 
       - name: Container logs on failure
         if: failure()
-        run: docker logs bracketwise-api-ci
+        run: |
+          if docker container inspect bracketwise-api-ci >/dev/null 2>&1; then
+            docker logs bracketwise-api-ci
+          else
+            echo "Container was not created; inspect the earlier failed step."
+          fi
 
       - name: Stop backend container
         if: always()
