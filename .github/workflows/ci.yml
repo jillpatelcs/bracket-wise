@@ -11,6 +11,8 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,7 +25,7 @@ jobs:
 
       - name: Backend tests
         working-directory: backend
-        run: bash mvnw -B verify
+        run: bash ./mvnw -B verify
 
       - uses: actions/setup-node@v4
         with:
@@ -55,7 +57,13 @@ jobs:
         run: docker build -t bracketwise-api:ci -f backend/Dockerfile .
 
       - name: Start backend container
-        run: docker run -d --name bracketwise-api-ci -p 8080:18080 -e PORT=18080 -e CORS_ORIGINS=https://bracketwise.example bracketwise-api:ci
+        run: |
+          docker run -d \
+            --name bracketwise-api-ci \
+            -p 8080:18080 \
+            -e PORT=18080 \
+            -e CORS_ORIGINS=https://bracketwise.example \
+            bracketwise-api:ci
 
       - name: Verify backend container user
         run: test "$(docker inspect -f '{{.Config.User}}' bracketwise-api-ci)" = '10001:10001'
@@ -67,14 +75,24 @@ jobs:
 
       - name: Start Vite proxy for integration smoke test
         working-directory: frontend
-        run: ./node_modules/.bin/vite --host 127.0.0.1 > /tmp/bracketwise-vite.log 2>&1 &
+        run: |
+          nohup ./node_modules/.bin/vite \
+            --host 127.0.0.1 \
+            --port 5173 \
+            --strictPort \
+            > /tmp/bracketwise-vite.log 2>&1 < /dev/null &
 
       - name: Frontend proxy integration smoke test (not production CORS verification)
         run: node scripts/smoke-test.mjs http://127.0.0.1:5173 --frontend
 
       - name: Vite logs on failure
         if: failure()
-        run: cat /tmp/bracketwise-vite.log || true
+        run: |
+          if [ -f /tmp/bracketwise-vite.log ]; then
+            cat /tmp/bracketwise-vite.log
+          else
+            echo "Vite was not started; inspect the earlier failed step."
+          fi
 
       - name: Container logs on failure
         if: failure()
@@ -87,4 +105,9 @@ jobs:
 
       - name: Stop backend container
         if: always()
-        run: docker rm -f bracketwise-api-ci
+        run: |
+          if docker container inspect bracketwise-api-ci >/dev/null 2>&1; then
+            docker rm -f bracketwise-api-ci
+          else
+            echo "No backend container to remove."
+          fi
