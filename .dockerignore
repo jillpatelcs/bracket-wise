@@ -11,3 +11,8 @@
 **/playwright-report
 **/test-results
 **/coverage
+.env*
+**/.env*
+secrets
+**/secrets
+tmp_request*.json

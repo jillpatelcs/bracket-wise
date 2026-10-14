@@ -1,5 +1,11 @@
 server:
+  address: 0.0.0.0
   port: ${PORT:8080}
+  error:
+    include-exception: false
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
   tomcat:
     max-http-form-post-size: 16384
     max-swallow-size: 16384
@@ -14,7 +20,7 @@ spring:
       max-file-size: 16KB
 bracketwise:
   tax-config: tax/tax-2026.json
-  cors-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:4173,http://127.0.0.1:5173,http://localhost:8080}
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:4173,http://127.0.0.1:5173,http://127.0.0.1:4173}
 springdoc:
   api-docs:
     path: /v3/api-docs

@@ -81,7 +81,63 @@ type CalculationResult = {
   };
 };
 
-const accountSequence: Account[] = ['TFSA', 'RRSP', 'FHSA'];
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/+$/, '');
+const requestTimeoutMs = 25_000;
+const maxAttempts = 3;
+
+const wait = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+
+const calculate = async (request: CalculationRequest): Promise<CalculationResult> => {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), requestTimeoutMs);
+    let retry = false;
+
+    try {
+      const response = await fetch(`${apiBaseUrl}/api/v1/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+        signal: controller.signal,
+      });
+
+      if (response.ok) {
+        return (await response.json()) as CalculationResult;
+      }
+
+      if ([502, 503, 504].includes(response.status)) {
+        await response.body?.cancel();
+        if (attempt < maxAttempts) {
+          retry = true;
+        } else {
+          throw new Error('The calculator is still starting. Please wait a moment and try again.');
+        }
+      } else {
+        const payload = await response.json().catch(() => ({ detail: 'Calculation failed.' }));
+        throw new Error(payload?.detail ?? payload?.message ?? `Calculation failed (${response.status}).`);
+      }
+    } catch (requestError) {
+      const isTransientNetworkError =
+        requestError instanceof TypeError ||
+        (requestError instanceof DOMException && requestError.name === 'AbortError');
+      if (!isTransientNetworkError || attempt === maxAttempts) {
+        if (requestError instanceof Error && !isTransientNetworkError) {
+          throw requestError;
+        }
+        throw new Error('The calculator did not respond in time. Please try again.');
+      }
+      retry = true;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+
+    if (retry) {
+      await wait(750 * 2 ** (attempt - 1));
+    }
+  }
+
+  throw new Error('The calculator is temporarily unavailable. Please try again.');
+};
 
 const makePeople = (mode: Mode): Person[] => {
   if (mode === 'SINGLE') {
@@ -197,19 +253,7 @@ function App() {
     setError(null);
 
     try {
-      const response = await fetch('/api/v1/calculate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-      });
-
-      if (!response.ok) {
-        const payload = await response.json().catch(() => ({ message: 'Calculation failed.' }));
-        throw new Error(payload?.detail ?? payload?.message ?? 'Calculation failed.');
-      }
-
-      const payload = (await response.json()) as CalculationResult;
-      setResult(payload);
+      setResult(await calculate(request));
     } catch (submitError) {
       const message = submitError instanceof Error ? submitError.message : 'Unexpected error';
       setError(message);
@@ -420,8 +464,16 @@ function App() {
         </section>
 
         <div className="actions">
-          <button type="submit" disabled={loading}>{loading ? 'Calculating…' : 'Run scenario'}</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Connecting to calculator…' : 'Run scenario'}
+          </button>
         </div>
+        {loading ? (
+          <p className="loading-note" role="status">
+            The free backend may need up to about a minute to wake after inactivity. This request will retry
+            briefly if the service is starting.
+          </p>
+        ) : null}
       </form>
 
       <section className="panel results">

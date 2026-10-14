@@ -172,7 +172,7 @@ Form state lives in memory for the session; reloading resets it ("Try an example
 | **FR-20** | Explanations | Each merged step returns the **actual amount, actual estimated tax savings, effective savings rate, and min/max increment rate**; no per-$100 field; step totals reconcile to scenario totals (16.6) |
 | **FR-21** | React workflow | Wizard, results tabs, responsive layout, keyboard operable, charts with accessible tables |
 | **FR-22** | Documented REST API | OpenAPI served at `/swagger-ui` and committed to `/docs` |
-| **FR-23** | Docker local run | `docker compose up` starts frontend and backend; documented in the README |
+| **FR-23** | Dockerized build and optional local run | CI builds and smoke-tests the backend Docker image; `docker compose up` is an optional local convenience, not a deployment prerequisite |
 | **FR-24** | Live deployment | Public frontend and backend URLs; E2E passes against the live site |
 | **FR-25** | Part-year restriction | If any person's `canadianTaxResidentForFullYear` is false: tax, tax savings, and modeled allocation are not computed; education, user-defined projection, and a warning are returned |
 | **FR-26** | FHSA first-home planning assumption | One household checkbox (`fhsaFirstHomePlan`); when true, FHSA qualifying withdrawals are assumed tax-free and rule R1 applies; when false, FHSA is treated like RRSP; requires at least one FHSA-eligible person; no amount, no date |
@@ -811,7 +811,7 @@ Valid single request; valid couple request; negative values; excess allocation; 
 | FR-20 Explanations | 3, 6 | JUnit accuracy and reconciliation tests; Jest rendering; Playwright step 8 |
 | FR-21 React workflow | 6 | Jest; Playwright; axe checks |
 | FR-22 REST API docs | 5 | OpenAPI check in CI; Newman suite |
-| FR-23 Docker local | 0, 7 | CI Docker build and compose smoke test |
+| FR-23 Docker build and optional local run | 0, 7 | CI Docker build and backend HTTP smoke test; Compose remains optional |
 | FR-24 Live deployment | 7 | Post-deploy smoke test; Playwright against the live URL |
 | FR-25 Part-year restriction | 3, 5 | JUnit restriction; Newman; Jest state |
 | FR-26 FHSA first-home planning assumption | 3, 4, 6 | JUnit R1 and FHSA-treatment toggle; Newman ineligible case; Jest checkbox; Playwright step 9 |
@@ -822,15 +822,16 @@ Valid single request; valid couple request; negative values; excess allocation; 
 ## 24. CI and deployment
 
 ### 24.1 GitHub Actions (every pull request and `main`)
-Backend compile and JUnit; frontend ESLint; TypeScript type check; Jest; production frontend build; Docker builds for backend and frontend; start the compose stack; Newman collection; one Playwright workflow against the compose stack; dependency vulnerability check. Required checks on `main`. Jenkins is not used (already demonstrated professionally).
+Backend compile and JUnit; frontend ESLint, TypeScript type check, Vitest, and production build; backend Docker image build and HTTP smoke test; frontend/backend integration smoke test through the Vite `/api` proxy. Docker Compose is optional local development and is not required by deployment or CI. No workflow deploys or creates cloud resources. Required checks on `main`. Jenkins is not used (already demonstrated professionally).
 
 ### 24.2 Deployment
-- **Frontend:** static host (Vercel), API base URL via environment variable.
-- **Backend:** Docker container on a free-tier web service (Render).
-- **PostgreSQL:** only if Phase 8b is built.
-- **Free-tier facts to re-verify before deploying** (checked October 2026): Render free web services spin down after 15 minutes without inbound traffic and take about a minute to wake, with 512 MB RAM and 0.1 CPU; Render free Postgres expires after 30 days (do not use it); Neon free compute suspends after 5 minutes idle.
-- **Cold-start handling:** clear loading message, up to 3 retries with backoff, `/health` call on page load, **measured cold-start time recorded in the README**. Light JVM tuning only if the measured time is unacceptable.
-- **Not included:** keep-warm pings, native-image work, distributed rate limiting, infrastructure added only for keywords.
+- **Frontend:** React/TypeScript static build on Vercel Hobby; project root `frontend`, build `npm run build`, output `dist`, public build-time API origin via `VITE_API_BASE_URL`.
+- **Backend:** Java 17/Spring Boot Docker web service on Render Free, built directly from GitHub; repository-root build context and Dockerfile `backend/Dockerfile`. Configure HTTP health check `/api/v1/health`; bind `0.0.0.0` and use Render's `PORT` with local fallback `8080`.
+- **CORS:** production frontend origin is explicitly configured using `CORS_ORIGINS`; only exact known production or deliberately allowed development origins, never a wildcard for Vercel previews.
+- **Persistence:** none. No database, authentication, storage, or save/share endpoint is part of this release.
+- **Cold-start handling:** clear loading message, bounded retries for transient network/gateway/service-starting failures, and a reproducible measurement procedure. Record a measured time only after live deployment.
+- **Compose:** optional for local development only; not a Render or Vercel prerequisite.
+- **Not included:** paid services, keep-warm pings, native-image work, distributed rate limiting, or infrastructure added only for keywords.
 
 ---
 
@@ -883,7 +884,7 @@ Save and share (all forms) and first-home targets are outside the default scope 
 
 - [ ] Every numeric tax parameter has an official source URL and retrieval date, verified immediately before implementation.
 - [ ] Live frontend and backend URLs work with no login; Playwright passes against the live site.
-- [ ] `docker compose up` runs the full app locally from the README alone.
+- [ ] CI builds the backend Docker image and verifies health, valid calculation, and invalid-input behavior; Docker Compose remains an optional local convenience.
 - [ ] Golden tax tests (worksheet-backed) green; allocation rule, percent-conversion, and explanation-accuracy tests green; allocator never exceeds budget or room; percent conversion preserves the budget to the cent.
 - [ ] Banned-term scan passes (no "refund", "take-home", "best", "optimal", "winner" in the UI); no combined score or ranking appears in the UI or API; no per-$100 explanation field exists.
 - [ ] No browser storage or server persistence in the default release (tested).

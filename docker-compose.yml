@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: bracketwise-backend
     ports:
       - "8080:8080"
@@ -23,5 +23,3 @@ services:
         condition: service_healthy
     ports:
       - "4173:80"
-    environment:
-      API_BASE_URL: http://backend:8080

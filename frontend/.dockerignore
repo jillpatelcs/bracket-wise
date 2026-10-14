@@ -1,0 +1,14 @@
+.git
+.idea
+.vscode
+node_modules
+dist
+*.iml
+*.log
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+playwright-report
+test-results
+coverage
